@@ -59,15 +59,30 @@ and two buttons next to each item - add and delete.
 When you click the add button, it should make a copy of the item and place it underneath.
 When you click the delete button, it should delete the item.
 Sample mock-up:
+
 Foo [+] [-]
+
 Bar [+] [-]
+
 Foobar [+] [-]
+
+
 When you click the add button next to "Bar", the list becomes:
+
 Foo [+] [-]
+
 Bar [+] [-]
+
 Bar [+] [-]
+
 Foobar [+] [-]
+
+
 When you then click the delete icon next to "Foo", the list becomes:
+
 Bar [+] [-]
+
 Bar [+] [-]
+
 Foobar [+] [-]
+
