@@ -1,6 +1,4 @@
-# Vanilla-Javascript-AI-Test
-
-
+...
 ======
 Task 1
 ======
@@ -14,16 +12,11 @@ Sample output:
 13
 ...
 Modify the program to output numbers that are both Fibonacci and a sum of two prime numbers.
-Sample output:
-Fib Prim1 Prim2
-------- ------- -------
-5 2 3
-8 3 5
-13 2 11
-21 2 19
-34 3 31
-34 5 29
-34 11 23
+*Sample output:*
+
+![image](https://user-images.githubusercontent.com/6148608/177623667-ac04bbb3-caeb-486c-a61d-921f32218f23.png)
+
+
 ...
 ======
 Task 2
@@ -53,9 +46,12 @@ b. Mandarins Queens 400g
 3. Write a report that shows the best and worst selling fruit per month for the past year.
 4. Write a report that forecasts which type of fruit will run out of stock
  in the next 7 days, based on sales data from the past 7 days.
+ 
+...
 ======
 Task 3
 ======
+
 For this task, you can use any front-end framework and/or library.
 Bonus points if you write it in plain HTML and vanilla JavaScript.
 Create a simple web page that shows a list of items,
