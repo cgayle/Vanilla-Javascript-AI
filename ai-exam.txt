@@ -1,0 +1,242 @@
+<style lang="css">
+  #list {
+    width: 60%;
+  }
+
+  #list th, td {
+    width: 33%;
+    text-align: left;
+  }
+</style>
+
+======
+<h2>TASK 1</h2>
+======
+
+<table id="fibo">
+  <tr>
+    <th>Fibonacci</th>
+  </tr>
+</table>
+<br />
+<table id="list">
+  <tr>
+    <th>Fibonacci</th>
+    <th>Prime 1</th>
+    <th>Prime 2</th>
+  </tr>
+</table>
+
+<script>
+  let prime1 = [];
+  let prime2 = [];
+
+  function isPrime(num) {
+    for (var i = 2; i < num; i++) {
+      if (num % i === 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function savePrime(n) {
+    var arr = [2];
+    for (var i = 3; i < n; i += 2) {
+      if (isPrime(i)) {
+        arr.push(i);
+      }
+    }
+    prime1.push(arr);
+    prime2.push(arr);
+  }
+
+  const checkPrime = (n) => {
+    let prime = n != 1;
+    for (var i = 2; i < n; i++) {
+      if (n % i == 0) {
+        prime = true;
+        break;
+      }
+    }
+    return prime;
+  };
+
+  const printFibonacciPrimeSequence = () => {
+    const start = 1;
+    const end = 1000;
+
+    let i = start;
+    let j = start;
+    let sum = 0;
+    let fiboLoop = [];
+
+    savePrime(end);
+   
+    do {
+      let fiboseries = document.getElementById("fibo");
+      sum = i + j;
+      if (sum < end && checkPrime(sum)) {
+        let fibotr = document.createElement("tr");
+        fibotr.insertAdjacentHTML(`beforeend`, `<td>${sum}</td>`);
+
+        prime1[0].forEach((element) => {
+          prime2[0].forEach((element2) => {
+            if (element + element2 == sum) {
+              fiboLoop.push({ sum: sum, p1: element, p2: element2});
+            }
+          });
+        });
+        fiboseries.appendChild(fibotr)
+      }
+      i = j;
+      j = sum;
+     
+    } while (sum < end);
+
+    // Filter similar primes
+    for (let i = 0, j = i + 1; j < fiboLoop.length; i++, j++) {
+      let item1 = fiboLoop[i]
+      let item2 = fiboLoop[j]
+      const isDuplicate = item1.p1 === item2.p2 && item1.p2 === item2.p1
+      if (isDuplicate) {
+        fiboLoop.splice(i, 1)
+      }
+    }
+
+    // Render table
+    let series = document.getElementById("list");
+    
+    fiboLoop.map(item => {
+      let tr = document.createElement("tr");
+
+      tr.insertAdjacentHTML(`beforeend`, `<td>${item.sum}</td><td>${item.p1}</td><td>${item.p2}</td>`);
+
+      series.appendChild(tr)
+     
+    })
+
+  };
+
+  printFibonacciPrimeSequence();
+</script>
+
+======
+<h2>TASK 2</h2>
+======
+// (A) LOAD DB MODULE
+const mysql = require("mysql");
+const { fileURLToPath } = require("url");
+
+// (B) CREATE CONNECTION - CHANGE TO YOUR OWN !
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "fruit_package",
+  port: 33067,
+});
+db.connect((err) => {
+  if (err) {
+    throw err;
+  }
+  console.log("DB connection OK");
+});
+
+// (C) QUERY
+db.query("SELECT * FROM `fruits`", (err, results) => {
+  if (err) {
+    throw err;
+  }
+  console.log("results", results);
+});
+
+db.query(
+  "SELECT s.fruit, f.type, s.weight FROM `fruits` as f INNER JOIN `stocks` as s ON f.id = s.fruit  ",
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+    console.log("stocks", results);
+  }
+);
+
+db.query(
+  "SELECT  f.type, s.quantity_sold FROM `fruits` as f INNER JOIN `sales` as s ON f.id = s.fruit  ",
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+    console.log("sales", results);
+  }
+);
+
+db.query(
+  "SELECT  f.type as name, sales.quantity_sold, f.price as sellers_price, sup.price as supplier_price, sales.date as prev_month, ((sales.quantity_sold * f.price) - (sales.quantity_sold * sup.price)) as profit FROM `fruits` as f INNER JOIN `supplier` as sup ON f.id = sup.fruit INNER JOIN `sales` as sales ON sales.fruit = f.id WHERE MONTH(sales.date) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)",
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+    results.forEach((element) => {
+      console.log("profit", element);
+    });
+  }
+);
+
+db.query(
+  "SELECT fruit.type FROM `fruits` as fruit INNER JOIN `sales` as sales_prod WHERE fruit.id = sales_prod.fruit AND YEAR(sales_prod.date) = YEAR(CURRENT_DATE - INTERVAL 1 YEAR) GROUP BY fruit.id HAVING  MIN(sales_prod.quantity_sold) LIMIT 1",
+  (err, results) => {
+    if (err) {
+      throw err;
+    }
+    results.forEach((element) => {
+      console.log("worst selling fruit", element);
+    });
+  }
+);
+
+<br>
+======
+<h2>TASK 3</h2>
+======
+
+<table id="mainList"></table>
+
+<script>
+  let list = ["Foo", "Bar", "Foobar"];
+  renderTable();
+
+  function renderTable() {
+    const mainList = document.getElementById("mainList");
+    mainList.innerHTML = "";
+    for (let i = 0; i < list.length; i++) {
+      let tr = document.createElement("tr");
+
+      let td1 = document.createElement("td");
+      td1.innerHTML = list[i];
+      tr.appendChild(td1);
+      tr.insertAdjacentHTML(
+        "beforeend",
+        `
+        <td>
+          <input type="button" value="+" onclick="addItem('${list[i]}')"/>
+          <input type="button" value="-" onclick="removeItem('${list[i]}')"/>
+        </td>
+      `
+      );
+      mainList.appendChild(tr);
+    }
+  }
+
+  function addItem(text) {
+    const index = list.indexOf(text);
+    list.splice(index, 0, text);
+    renderTable();
+  }
+
+  function removeItem(text) {
+    const index = list.indexOf(text);
+    list.splice(index, 1);
+    renderTable();
+  }
+</script>
