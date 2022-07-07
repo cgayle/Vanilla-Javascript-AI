@@ -1,12 +1,29 @@
+<style lang="css">
+  #list {
+    width: 60%;
+  }
+
+  #list th, td {
+    width: 33%;
+    text-align: left;
+  }
+</style>
+
 ======
 <h2>TASK 1</h2>
 ======
 
+<table id="fibo">
+  <tr>
+    <th>Fibonacci</th>
+  </tr>
+</table>
+<br />
 <table id="list">
   <tr>
-    <th style="width: 100px">Fibonacci</th>
-    <!-- <th style="width: 200px">Prime 1</th>
-    <th style="width: 200px">Prime 2</th> -->
+    <th>Fibonacci</th>
+    <th>Prime 1</th>
+    <th>Prime 2</th>
   </tr>
 </table>
 
@@ -52,37 +69,53 @@
     let i = start;
     let j = start;
     let sum = 0;
-    let counter = 0;
     let fiboLoop = [];
 
     savePrime(end);
-
+   
     do {
-      let series = document.getElementById("list");
+      let fiboseries = document.getElementById("fibo");
       sum = i + j;
       if (sum < end && checkPrime(sum)) {
-        let tr = document.createElement("tr");
-        var arrayTableHeader = [];
-        // fiboLoop.forEach(element => {
-        tr.insertAdjacentHTML(`beforeend`, `<td>${sum}</td>`);
-        // });
+        let fibotr = document.createElement("tr");
+        fibotr.insertAdjacentHTML(`beforeend`, `<td>${sum}</td>`);
 
         prime1[0].forEach((element) => {
           prime2[0].forEach((element2) => {
             if (element + element2 == sum) {
-              fiboLoop.push(sum);
-              tr.insertAdjacentHTML("beforeend", `<td>${element}</td> &`);
-              tr.insertAdjacentHTML("beforeend", `<td>${element2}</td> |`);
-              counter += 1;
+              fiboLoop.push({ sum: sum, p1: element, p2: element2});
             }
           });
         });
-
-        series.appendChild(tr);
+        fiboseries.appendChild(fibotr)
       }
       i = j;
       j = sum;
+     
     } while (sum < end);
+
+    // Filter similar primes
+    for (let i = 0, j = i + 1; j < fiboLoop.length; i++, j++) {
+      let item1 = fiboLoop[i]
+      let item2 = fiboLoop[j]
+      const isDuplicate = item1.p1 === item2.p2 && item1.p2 === item2.p1
+      if (isDuplicate) {
+        fiboLoop.splice(i, 1)
+      }
+    }
+
+    // Render table
+    let series = document.getElementById("list");
+    
+    fiboLoop.map(item => {
+      let tr = document.createElement("tr");
+
+      tr.insertAdjacentHTML(`beforeend`, `<td>${item.sum}</td><td>${item.p1}</td><td>${item.p2}</td>`);
+
+      series.appendChild(tr)
+     
+    })
+
   };
 
   printFibonacciPrimeSequence();
@@ -91,18 +124,8 @@
 ======
 <h2>TASK 2</h2>
 ======
-
-<script>
-  // NOTE: RUN WITH HTTP://, NOT FILE://
-  window.addEventListener("load", () => {
-    fetch("task2.js", { method: "GET" }).then((message) => {
-      console.log(message);
-    });
-  });
-  
-  
-</script>
-
+<i>Pls. check task2.js file</i>
+<br>
 ======
 <h2>TASK 3</h2>
 ======
